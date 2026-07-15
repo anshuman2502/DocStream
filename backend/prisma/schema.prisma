@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PdfState {
+  PRIVATE
+  PUBLISHED
+  PUBLIC
+}
+
+enum AccessType {
+  VIEW
+  EDIT
+}
+
+enum AnnotationType {
+  HIGHLIGHT
+  COMMENT
+  DRAWING
+  EDIT
+}
+
+model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String       @unique
+  password     String
+  pdfs         Pdf[]
+  accessGrants PdfAccess[]
+  annotations  Annotation[]
+  createdAt    DateTime     @default(now())
+}
+
+model Pdf {
+  id           String       @id @default(uuid())
+  filename     String       // storage key in the Supabase bucket
+  originalName String
+  size         Int
+  state        PdfState     @default(PRIVATE)
+  owner        User         @relation(fields: [ownerId], references: [id])
+  ownerId      String
+  accessGrants PdfAccess[]
+  annotations  Annotation[]
+  createdAt    DateTime     @default(now())
+}
+
+model PdfAccess {
+  id         String     @id @default(uuid())
+  pdf        Pdf        @relation(fields: [pdfId], references: [id])
+  pdfId      String
+  user       User       @relation(fields: [userId], references: [id])
+  userId     String
+  accessType AccessType
+  grantedAt  DateTime   @default(now())
+
+  @@unique([pdfId, userId])
+}
+
+model Annotation {
+  id        String         @id @default(uuid())
+  pdf       Pdf            @relation(fields: [pdfId], references: [id])
+  pdfId     String
+  user      User           @relation(fields: [userId], references: [id])
+  userId    String
+  type      AnnotationType
+  page      Int
+  data      Json
+  createdAt DateTime       @default(now())
+}
