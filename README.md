@@ -58,6 +58,7 @@ Each PDF has its own Socket.io room, identified by `pdfId`.
 2. A client with EDIT access creates an annotation and emits `new-annotation` with `{ pdfId, annotation }`.
 3. The server saves the annotation to PostgreSQL, then emits `annotation-added` to every other client in the room.
 4. Other clients render the new annotation without a page reload.
+5. specific for organization.
 
 The server also emits `user-joined` and `user-left` so clients can show who is currently viewing a document.
 
