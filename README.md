@@ -173,11 +173,11 @@ Rate limiting, file size validation, error boundaries, loading states, mobile la
 npm install
 
 # set environment variables (.env)
-DATABASE_URL=
-JWT_SECRET=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_S3_BUCKET=
+DATABASE_URL=***************
+JWT_SECRET=*****************
+AWS_ACCESS_KEY_ID=**********
+AWS_SECRET_ACCESS_KEY=******
+AWS_S3_BUCKET=**************
 
 # run database migrations
 npx prisma migrate dev
